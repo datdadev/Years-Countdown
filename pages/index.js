@@ -43,7 +43,7 @@ export default function Home() {
         <div className='absolute bottom-0 opacity-25 xsm:right-0 p-1'>© 2022 DatDaDev</div>
           <div className='bg-white/25 rounded-xl p-5'>
             <h1 className='text-white font-bold text-center text-xl xsm:text-3xl lg:text-4xl'>Happy <br className='block xsm:hidden'/>New Year</h1>
-            <h2 className='pt-1 text-center text-white/75'>until {year}</h2>
+            <h2 className='pt-1 text-center text-white/75'>for {year} in</h2>
             <div className='pt-3 grid grid-cols-1 xsm:grid-cols-4 items-center justify-around gap-3'>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
                 <div className='font-bold text-2xl lg:text-3xl'>{days}</div>
