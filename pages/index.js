@@ -69,7 +69,7 @@ export default function Home() {
           muted
           autoplay
           playsinline
-          class='z-0 bg-red-500 blur-3xl h-screen object-cover w-full'
+          class='z-0 blur-3xl h-screen object-cover w-full'
           src="${"/video.mp4"}"
         />,
       ` }}></div>
