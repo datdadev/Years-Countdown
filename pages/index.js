@@ -1,35 +1,54 @@
-import Head from 'next/head'
-import { useState, useEffect } from 'react'
+import { Temporal } from '@js-temporal/polyfill';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useEffect, useMemo, useState } from 'react';
+
+const TIME_ZONE = Temporal.TimeZone.from("Asia/Ho_Chi_Minh");
+const LUNAR_CALENDAR = Temporal.Calendar.from("chinese");
+const NORMAL_CALENDAR = Temporal.Calendar.from("iso8601");
 
 export default function Home() {
-  const [year, setYear] = useState(new Date().getUTCFullYear())
-  const newYear = new Date(`Jan 2, ${year}`).getTime()
 
-  const [days, setDays] = useState(0)
-  const [hours, setHours] = useState(0)
-  const [minutes, setMinutes] = useState(0)
-  const [seconds, setSeconds] = useState(0)
+  const [calendar, setCalendar] = useState(NORMAL_CALENDAR);
+
+  // const newYear = useMemo(() => Temporal.Now.zonedDateTime(calendar, TIME_ZONE).add({ seconds: 5 }), [calendar])
+  const newYear = useMemo(() => Temporal.ZonedDateTime.from({
+    calendar,
+    timeZone: TIME_ZONE,
+    year: Temporal.Now.zonedDateTime(calendar, TIME_ZONE).year + 1,
+    month: 1,
+    day: 1,
+  }), [calendar]);
+
+  const [distance, setDistance] = useState(new Temporal.Duration());
 
   useEffect(() => {
-    const timeId = setInterval(() => {
-      const now = new Date().getTime()
-      const distance = (newYear - now) / 1000
-      if (distance > 0) {
-        const days = Math.floor(distance/60/60/24)
-        const hours = Math.floor(distance/60/60 % 24)
-        const minutes = Math.floor(distance/60 % 24)
-        const seconds = Math.floor(distance % 60)
-        setDays(days)
-        setHours(hours)
-        setMinutes(minutes)
-        setSeconds(seconds)
-      }
-      else {
-        clearInterval(timeId)
-        setYear(year+1)
-      }
-    })
-  }, [newYear])
+    const id = setInterval(() => {
+      setDistance(() => {
+        const newDistance = newYear.since(Temporal.Now.zonedDateTime(calendar, TIME_ZONE), {largestUnit: "days", smallestUnit: "seconds"});
+        if (newDistance.sign != -1) {
+          return newDistance;
+        } else {
+          clearInterval(id);
+          return new Temporal.Duration();
+        }
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [calendar])
+
+  // change calendar base on query
+  const router = useRouter();
+  const { lunar } = router.query;
+  useEffect(() => {
+    if (lunar !== undefined) {
+      setCalendar(LUNAR_CALENDAR);
+    } else {
+      setCalendar(NORMAL_CALENDAR);
+    }
+  }, [lunar])
+
 
   return (
     <>
@@ -40,25 +59,29 @@ export default function Home() {
       </Head>
       <main>
         <div className='z-10 absolute w-full h-full flex flex-col items-center justify-center'>
-        <div className='absolute bottom-0 opacity-25 xsm:right-0 p-1'>© 2022 DatDaDev</div>
+        <div className='absolute bottom-0 opacity-25 xsm:right-0 p-1'>© 2022 DatDaDev, {
+          calendar.id === LUNAR_CALENDAR.id
+          ? <Link className='underline' href="?">normal mode</Link>
+          : <Link className='underline' href="?lunar">lunar mode</Link>
+        }</div>
           <div className='bg-white/25 rounded-xl p-5'>
-            <h1 className='text-white font-bold text-center text-xl xsm:text-3xl lg:text-4xl'>Happy <br className='block xsm:hidden'/>New Year</h1>
-            <h2 className='pt-1 text-center text-white/75'>for {year} in</h2>
+            <h1 className='text-white font-bold text-center text-xl xsm:text-3xl lg:text-4xl'>Happy {calendar.id === LUNAR_CALENDAR.id ? "Lunar " : " "}<br className='block xsm:hidden'/>New Year</h1>
+            <h2 className='pt-1 text-center text-white/75'>for {newYear.year} in</h2>
             <div className='pt-3 grid grid-cols-1 xsm:grid-cols-4 items-center justify-around gap-3'>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{days}</div>
+                <div className='font-bold text-2xl lg:text-3xl'>{distance.days}</div>
                 <h3 className='text-white/75'>days</h3>
               </div>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{hours}</div>
+                <div className='font-bold text-2xl lg:text-3xl'>{distance.hours}</div>
                 <h3 className='text-white/75'>hours</h3>
               </div>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{minutes}</div>
+                <div className='font-bold text-2xl lg:text-3xl'>{distance.minutes}</div>
                 <h3 className='text-white/75'>minutes</h3>
               </div>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{seconds}</div>
+                <div className='font-bold text-2xl lg:text-3xl'>{distance.seconds}</div>
                 <h3 className='text-white/75'>seconds</h3>
               </div>
             </div>
