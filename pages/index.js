@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 
+const TIME_ZONE = Temporal.TimeZone.from("Asia/Ho_Chi_Minh");
+const LUNAR_CALENDAR = Temporal.Calendar.from("chinese");
+const NORMAL_CALENDAR = Temporal.Calendar.from("iso8601");
 
 export default function Home() {
-  const TIME_ZONE = Temporal.TimeZone.from("Asia/Ho_Chi_Minh");
-  const LUNAR_CALENDAR = Temporal.Calendar.from("chinese");
-  const NORMAL_CALENDAR = Temporal.Calendar.from("iso8601");
 
   const [calendar, setCalendar] = useState(NORMAL_CALENDAR);
 
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* <div dangerouslySetInnerHTML={{ __html: `
+        <div dangerouslySetInnerHTML={{ __html: `
         <video
           loop
           muted
@@ -96,7 +96,7 @@ export default function Home() {
           class='z-0 blur-3xl absolute h-full object-cover w-full'
           src="${"/video.mp4"}"
         />,
-      ` }}></div> */}
+      ` }}></div>
       </main>
     </>
   )
