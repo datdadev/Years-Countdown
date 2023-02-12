@@ -46,19 +46,19 @@ export default function Home() {
             <h2 className='pt-1 text-center text-white/75'>for {year} in</h2>
             <div className='pt-3 grid grid-cols-1 xsm:grid-cols-4 items-center justify-around gap-3'>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{days}</div>
+                <div className='font-bold text-white text-2xl lg:text-3xl'>{days}</div>
                 <h3 className='text-white/75'>days</h3>
               </div>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{hours}</div>
+                <div className='font-bold text-white text-2xl lg:text-3xl'>{hours}</div>
                 <h3 className='text-white/75'>hours</h3>
               </div>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{minutes}</div>
+                <div className='font-bold text-white text-2xl lg:text-3xl'>{minutes}</div>
                 <h3 className='text-white/75'>minutes</h3>
               </div>
               <div className='p-3 text-sm mx-auto bg-black/25 rounded-xl flex flex-col items-center gap-1 w-20'>
-                <div className='font-bold text-2xl lg:text-3xl'>{seconds}</div>
+                <div className='font-bold text-white text-2xl lg:text-3xl'>{seconds}</div>
                 <h3 className='text-white/75'>seconds</h3>
               </div>
             </div>
